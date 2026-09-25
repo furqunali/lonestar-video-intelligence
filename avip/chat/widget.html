@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Sugarland Petroleum — Support</title>
+<style>
+:root{--navy:#12314f;--teal:#0c8f95;--teal2:#26c6cc;--bg:#f4f7fa;--panel:#fff;
+  --line:#e1e8f0;--ink:#17202b;--ink2:#5a6b7d;--ink3:#8595a7;--user:#0c8f95;--bot:#eef2f7;
+  --pass:#1f9d6b;--crit:#cf4141;--warn:#c47f1a;--shadow:0 18px 50px rgba(16,32,48,.28)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1826;--panel:#16202e;--line:#2a3a4e;
+  --ink:#e8eef6;--ink2:#a9b8c9;--ink3:#7386;--bot:#1c2837}}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+#launch{position:fixed;right:22px;bottom:22px;z-index:99999;background:linear-gradient(135deg,var(--navy),var(--teal));
+  color:#fff;border:none;border-radius:30px;padding:14px 22px;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:var(--shadow);display:flex;gap:8px;align-items:center}
+#launch:hover{filter:brightness(1.08)}
+#panel{position:fixed;right:22px;bottom:84px;width:400px;max-width:94vw;height:640px;max-height:82vh;z-index:99999;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+  display:none;flex-direction:column;overflow:hidden}
+#panel.open{display:flex}
+.hd{background:linear-gradient(135deg,var(--navy),#123047);color:#fff;padding:13px 15px}
+.hd .b{font-weight:700;font-size:14.5px}.hd .s{font-size:11px;color:#b8c7d6;margin-top:1px}
+.hd .x{float:right;cursor:pointer;font-size:20px;opacity:.85;line-height:1}
+.id{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--bot);align-items:center;flex-wrap:wrap}
+.id input,.id select{padding:7px 8px;border:1px solid var(--line);border-radius:8px;font-size:12px;background:var(--panel);color:var(--ink)}
+.id input{flex:1;min-width:88px}
+.id button{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;cursor:pointer;font-weight:600}
+.who{font-size:11px;color:var(--ink2)}
+.tabs{display:flex;border-bottom:1px solid var(--line);background:var(--panel)}
+.tab{flex:1;text-align:center;padding:9px;font-size:12.5px;color:var(--ink2);cursor:pointer;border-bottom:2px solid transparent}
+.tab.on{color:var(--teal);border-bottom-color:var(--teal);font-weight:700}
+.tab .badge{background:var(--crit);color:#fff;border-radius:10px;padding:0 6px;font-size:10px;margin-left:4px}
+.view{flex:1;overflow-y:auto;display:none;flex-direction:column}
+.view.on{display:flex}
+#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:86%;padding:9px 12px;border-radius:13px;font-size:13.5px;white-space:pre-wrap;line-height:1.45;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:var(--user);color:#fff;border-bottom-right-radius:3px}
+.msg.assistant{align-self:flex-start;background:var(--bot);color:var(--ink);border-bottom-left-radius:3px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:6px 12px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px 11px;font-size:11.5px;cursor:pointer;color:var(--teal)}
+.reqs,.team{padding:10px;overflow-y:auto}
+.req{border:1px solid var(--line);border-radius:10px;padding:10px;margin:0 0 8px;background:var(--panel);font-size:12.5px}
+.req b{color:var(--teal2)} .req .btns{margin-top:8px;display:flex;gap:6px}
+.req button{border:none;border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;color:#fff;font-weight:600}
+.req .ap{background:var(--pass)} .req .dn{background:var(--crit)}
+.tmsg{font-size:12px;padding:6px 2px;border-bottom:1px solid var(--line)}
+.tmsg .u{font-weight:700;color:var(--navy)} .tmsg .r{color:var(--ink3);font-size:10px}
+.tmsg .t{color:var(--ink2)}
+.empty{color:var(--ink3);font-size:12.5px;text-align:center;padding:24px}
+.inp{display:flex;gap:6px;padding:10px;border-top:1px solid var(--line);background:var(--panel)}
+.inp input{flex:1;padding:11px;border:1px solid var(--line);border-radius:10px;font-size:13.5px;background:var(--panel);color:var(--ink)}
+.inp button{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:0 17px;font-weight:700;cursor:pointer}
+.foot{font-size:10px;color:var(--ink3);text-align:center;padding:5px}
+@media (max-width:520px){
+  #panel{right:0;bottom:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;border:none}
+  #launch{right:16px;bottom:16px}
+}
+</style></head>
+<body>
+<button id="launch">💬 Support</button>
+<div id="panel">
+  <div class="hd"><span class="x" onclick="toggle(false)">×</span>
+    <div class="b">Sugarland Petroleum · Support</div>
+    <div class="s">AI Video-Intelligence assistant · offline · everyone welcome</div></div>
+  <div class="id">
+    <input id="uid" placeholder="your name">
+    <select id="role"><option value="staff">Camera team / Staff</option>
+      <option value="manager">Manager</option><option value="director">Director</option></select>
+    <button onclick="startSession()">Start</button><span class="who" id="who"></span>
+  </div>
+  <div class="tabs">
+    <div class="tab on" data-v="chat" onclick="tab('chat')">Chat</div>
+    <div class="tab" data-v="appr" onclick="tab('appr')" id="tabAppr" style="display:none">Approvals<span class="badge" id="badge" style="display:none">0</span></div>
+    <div class="tab" data-v="team" onclick="tab('team')" id="tabTeam" style="display:none">Team</div>
+  </div>
+  <div class="view on" id="v-chat">
+    <div id="msgs"></div>
+    <div class="chips" id="chips"></div>
+    <div class="inp"><input id="text" placeholder="Ask anything… e.g. 'summary', 'evidence', 'risk ranking'"
+         onkeydown="if(event.key==='Enter')send()"><button onclick="send()">Send</button></div>
+  </div>
+  <div class="view" id="v-appr"><div class="reqs" id="reqs"></div></div>
+  <div class="view" id="v-team"><div class="team" id="teamBox"></div></div>
+  <div class="foot">History &amp; memory saved centrally · sensitive actions need Manager→Director approval</div>
+</div>
+<script>
+var API=location.origin,SID=localStorage.getItem('slp_sid')||null,
+ USER=localStorage.getItem('slp_user')||'',ROLE=localStorage.getItem('slp_role')||'staff',
+ pollTimer=null,lastCount=-1,CUR='chat';
+function el(i){return document.getElementById(i);}
+function toggle(o){el('panel').classList.toggle('open',o);if(o)restore();}
+el('launch').onclick=function(){toggle(!el('panel').classList.contains('open'));};
+function tab(v){CUR=v;['chat','appr','team'].forEach(function(x){
+  el('v-'+x).classList.toggle('on',x===v);});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.v===v);});
+  if(v==='team')loadTeam();if(v==='appr')poll();}
+function add(s,t){var d=document.createElement('div');d.className='msg '+s;d.textContent=t;
+  el('msgs').appendChild(d);el('msgs').scrollTop=el('msgs').scrollHeight;}
+function addImages(imgs){if(!imgs||!imgs.length)return;var w=document.createElement('div');
+  w.style.cssText='display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start;max-width:92%;margin:-2px 0 2px';
+  imgs.forEach(function(u){var a=document.createElement('a');a.href=u;a.target='_blank';
+    var im=document.createElement('img');im.src=u;
+    im.style.cssText='width:124px;height:74px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer';
+    a.appendChild(im);w.appendChild(a);});
+  el('msgs').appendChild(w);el('msgs').scrollTop=el('msgs').scrollHeight;}
+function chips(l){el('chips').innerHTML='';(l||[]).forEach(function(s){var c=document.createElement('span');
+  c.className='chip';c.textContent=s;c.onclick=function(){el('text').value=s;send();};el('chips').appendChild(c);});}
+async function api(p,b){var r=await fetch(API+p,{method:b?'POST':'GET',
+  headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});return r.json();}
+function roleTabs(){var mg=(ROLE==='manager'||ROLE==='director');
+  el('tabAppr').style.display=mg?'block':'none';el('tabTeam').style.display=mg?'block':'none';}
+async function startSession(){USER=el('uid').value.trim()||'guest';ROLE=el('role').value;
+  var j=await api('/api/session',{user_id:USER,role:ROLE});SID=j.session_id;
+  localStorage.setItem('slp_sid',SID);localStorage.setItem('slp_user',USER);localStorage.setItem('slp_role',ROLE);
+  el('who').textContent=USER+' · '+ROLE;el('msgs').innerHTML='';lastCount=-1;roleTabs();tab('chat');
+  add('assistant','Hello '+USER+"! Ask me anything — reporting, real-time data, evidence, analytics, or a summary. I can also run actions (with approval).");
+  chips(['summary','show incidents','evidence','risk ranking','camera health','help']);poll();}
+function restore(){if(USER){el('uid').value=USER;el('role').value=ROLE;el('who').textContent=USER+' · '+ROLE;roleTabs();}
+  if(SID){lastCount=-1;syncHistory();poll();}}
+async function syncHistory(){if(!SID)return;var h=await api('/api/history?session_id='+SID);
+  if(h.length===lastCount)return;lastCount=h.length;el('msgs').innerHTML='';
+  h.forEach(function(m){if(m.sender!=='system'){add(m.sender,m.text);
+    if(m.meta&&m.meta.images&&m.meta.images.length)addImages(m.meta.images);}});}
+async function send(){var t=el('text').value.trim();if(!t)return;if(!SID){await startSession();}
+  el('text').value='';add('user',t);lastCount++;var j=await api('/api/chat',{session_id:SID,text:t});
+  add('assistant',j.reply);if(j.images)addImages(j.images);lastCount++;chips(j.suggestions);poll();}
+async function poll(){if(pollTimer)clearTimeout(pollTimer);
+  if(ROLE==='manager'||ROLE==='director'){var p=await api('/api/pending?role='+ROLE);renderReqs(p);
+    el('badge').style.display=p.length?'inline':'none';el('badge').textContent=p.length;}
+  if(CUR==='chat')syncHistory();if(CUR==='team')loadTeam();
+  pollTimer=setTimeout(poll,4000);}
+function renderReqs(p){var b=el('reqs');b.innerHTML='';if(!p||!p.length){b.innerHTML='<div class="empty">No pending approvals.</div>';return;}
+  p.forEach(function(r){var d=document.createElement('div');d.className='req';
+    d.innerHTML='<b>'+r.action+'</b> · requested by '+r.user_id+'<br><span style="color:var(--ink3)">needs '+(r.pending_roles||[]).join(' → ')+' approval</span>'+
+      '<div class="btns"><button class="ap">✓ Approve</button><button class="dn">✕ Deny</button></div>';
+    d.querySelector('.ap').onclick=function(){decide(r.id,'approve');};
+    d.querySelector('.dn').onclick=function(){decide(r.id,'deny');};b.appendChild(d);});}
+async function decide(id,dec){await api('/api/approve',{request_id:id,approver_id:USER,role:ROLE,decision:dec,note:''});poll();}
+async function loadTeam(){var t=await api('/api/team?role='+ROLE);var b=el('teamBox');b.innerHTML='';
+  if(!t||!t.length){b.innerHTML='<div class="empty">No team conversations yet.</div>';return;}
+  t.forEach(function(m){var d=document.createElement('div');d.className='tmsg';
+    d.innerHTML='<span class="u">'+(m.uid||'?')+'</span> <span class="r">'+(m.urole||'')+' · '+(m.sender)+'</span><br><span class="t">'+
+      (m.text||'').replace(/</g,'&lt;').slice(0,240)+'</span>';b.appendChild(d);});
+  b.scrollTop=b.scrollHeight;}
+</script>
+</body></html>

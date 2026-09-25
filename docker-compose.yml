@@ -1,0 +1,61 @@
+# Full production stack for the Lone Star AVIP PoC.
+#
+# The offline pipeline + test-suite run WITHOUT any of this (SQLite default).
+# Bring this up only when you want the Postgres/TimescaleDB + MinIO +
+# FastAPI + Prefect production path (milestones M8–M10).
+#
+#   docker compose up -d db minio        # data plane storage
+#   docker compose up -d api prefect     # control plane (later milestones)
+#
+# No store credentials live here. Passwords come from your local .env.
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-avip}
+      POSTGRES_USER: ${POSTGRES_USER:-avip}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-avip}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./avip/db/schema.sql:/docker-entrypoint-initdb.d/00_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-avip}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-avip}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-avip_secret}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  api:
+    build: .
+    command: uvicorn avip.api.main:app --host 0.0.0.0 --port 8000
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  prefect:
+    image: prefecthq/prefect:2-latest
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+
+volumes:
+  db_data:
+  minio_data:

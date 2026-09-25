@@ -1,0 +1,68 @@
+# Per-camera register + zone polygons.
+#
+# Confirmed against the filled Data Request Form (Camera Audit team, 29 Aug 2026):
+# six register cameras, two per PoC site, on i3 SRX-Pro servers exported to MP4
+# via FreeCam. Sites: 0008 Mesa Valero, 0025 Polo Club, 0028 Woodridge.
+#
+# Cameras are identified by number ("Register 1/2"); functional zone names are
+# assigned here from camera coverage (the team confirmed this is expected).
+#
+# NOTE: camera/server IPs, ports and DVR login credentials from the intake docs
+# are deliberately NOT stored here. This offline PoC reads exported MP4 files and
+# needs no live connection or credentials (CLAUDE.md §3, design rule #6). If a
+# later gate adds live pull, those secrets come from env/.env, never this file.
+#
+# Zone polygons are NORMALIZED (x, y in 0..1) and scaled to each frame's pixel
+# size at runtime, so they are independent of the DVR export resolution.
+
+cameras:
+  # ---- 0008 Mesa Valero ----
+  - camera_id: "CAM-0008-1"
+    location_id: "0008"
+    name: "Register 1"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.30, 0.35], [0.70, 0.35], [0.70, 0.95], [0.30, 0.95]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]
+      entrance:   [[0.72, 0.05], [0.98, 0.05], [0.98, 0.55], [0.72, 0.55]]
+  - camera_id: "CAM-0008-2"
+    location_id: "0008"
+    name: "Register 2"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.28, 0.40], [0.68, 0.40], [0.68, 0.96], [0.28, 0.96]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]
+
+  # ---- 0025 Polo Club ----
+  - camera_id: "CAM-0025-1"
+    location_id: "0025"
+    name: "Register 1"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.33, 0.38], [0.72, 0.38], [0.72, 0.95], [0.33, 0.95]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]
+      entrance:   [[0.02, 0.05], [0.28, 0.05], [0.28, 0.55], [0.02, 0.55]]
+  - camera_id: "CAM-0025-2"
+    location_id: "0025"
+    name: "Register 2"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.30, 0.42], [0.70, 0.42], [0.70, 0.96], [0.30, 0.96]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]
+
+  # ---- 0028 Woodridge ----
+  - camera_id: "CAM-0028-1"
+    location_id: "0028"
+    name: "Register 1"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.31, 0.36], [0.71, 0.36], [0.71, 0.95], [0.31, 0.95]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]
+      restricted: [[0.75, 0.60], [0.98, 0.60], [0.98, 0.98], [0.75, 0.98]]
+  - camera_id: "CAM-0028-2"
+    location_id: "0028"
+    name: "Register 2"
+    model: "i3 SRX-Pro (FreeCam MP4)"
+    zones:
+      register:   [[0.29, 0.40], [0.69, 0.40], [0.69, 0.96], [0.29, 0.96]]
+      sales_floor: [[0.00, 0.10], [1.00, 0.10], [1.00, 1.00], [0.00, 1.00]]

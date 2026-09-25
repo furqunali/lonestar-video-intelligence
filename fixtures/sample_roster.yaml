@@ -1,0 +1,109 @@
+# =============================================================================
+#  SAMPLE / PLACEHOLDER ROSTER  —  NOT REAL EMPLOYEE DATA
+# =============================================================================
+# Fabricated data used only to build and demonstrate the identity (M6) and
+# grading (M7) engines end-to-end. Names, badge (ArUco) codes, shifts and
+# biometric clock-in/out are INVENTED.
+#
+# No grade computed from this file may ever be published. The real employee
+# roster, ArUco->employee badge mapping, biometric attendance export, and the
+# labelled golden-set replace this file before any grade affects a real person
+# (CLAUDE.md §6, spec §9.6 calibration gate).
+#
+# Times are store-local (America/Chicago) ISO-8601 strings with explicit offset.
+# Demo work_date: 2026-09-02 (0008 Mesa Valero).
+
+work_date: "2026-09-02"
+
+employees:
+  - employee_id: "EMP-0008-01"
+    name: "Sample Cashier A"
+    role: cashier
+    role_colour: red
+    location_id: "0008"
+    status: active
+  - employee_id: "EMP-0008-02"
+    name: "Sample Cashier B"
+    role: cashier
+    role_colour: red
+    location_id: "0008"
+    status: active
+  - employee_id: "EMP-0008-03"
+    name: "Sample Sales Associate"
+    role: sales_associate
+    role_colour: blue
+    location_id: "0008"
+    status: active
+  - employee_id: "EMP-0008-04"
+    name: "Sample Store Manager"
+    role: manager
+    role_colour: orange
+    location_id: "0008"
+    status: active
+
+# marker_code -> employee_id. Reissue-safe: a lost badge is marked inactive and
+# a new marker_code points at the SAME employee (spec §9.5).
+markers:
+  - marker_code: "ARUCO-11"
+    employee_id: "EMP-0008-01"
+    active: true
+    issued_at: "2026-08-01T00:00:00-05:00"
+  - marker_code: "ARUCO-08"        # EMP-0008-01's OLD, lost badge (reissued)
+    employee_id: "EMP-0008-01"
+    active: false
+    issued_at: "2026-01-01T00:00:00-06:00"
+  - marker_code: "ARUCO-12"
+    employee_id: "EMP-0008-02"
+    active: true
+    issued_at: "2026-08-01T00:00:00-05:00"
+  - marker_code: "ARUCO-21"
+    employee_id: "EMP-0008-03"
+    active: true
+    issued_at: "2026-08-01T00:00:00-05:00"
+  - marker_code: "ARUCO-31"
+    employee_id: "EMP-0008-04"
+    active: true
+    issued_at: "2026-08-01T00:00:00-05:00"
+
+# Shift roster: expected zone per employee for the day.
+shifts:
+  - employee_id: "EMP-0008-01"
+    location_id: "0008"
+    zone: register
+    start_ts: "2026-09-02T08:00:00-05:00"
+    end_ts:   "2026-09-02T16:00:00-05:00"
+  - employee_id: "EMP-0008-02"
+    location_id: "0008"
+    zone: register
+    start_ts: "2026-09-02T16:00:00-05:00"
+    end_ts:   "2026-09-02T23:00:00-05:00"
+  - employee_id: "EMP-0008-03"
+    location_id: "0008"
+    zone: sales_floor
+    start_ts: "2026-09-02T09:00:00-05:00"
+    end_ts:   "2026-09-02T17:00:00-05:00"
+  - employee_id: "EMP-0008-04"
+    location_id: "0008"
+    zone: register
+    start_ts: "2026-09-02T08:00:00-05:00"
+    end_ts:   "2026-09-02T17:00:00-05:00"
+
+# Biometric attendance (clock-in/out) — the duty-hours source of truth (spec §9.5).
+attendance:
+  - employee_id: "EMP-0008-01"
+    location_id: "0008"
+    work_date: "2026-09-02"
+    clock_in:  "2026-09-02T07:58:00-05:00"
+    clock_out: "2026-09-02T16:03:00-05:00"
+  - employee_id: "EMP-0008-02"
+    location_id: "0008"
+    work_date: "2026-09-02"
+    clock_in:  "2026-09-02T15:57:00-05:00"
+    clock_out: "2026-09-02T23:01:00-05:00"
+  - employee_id: "EMP-0008-03"
+    location_id: "0008"
+    work_date: "2026-09-02"
+    clock_in:  "2026-09-02T09:02:00-05:00"
+    clock_out: "2026-09-02T17:00:00-05:00"
+  # NOTE: EMP-0008-04 (manager) has NO attendance row -> exercises the
+  # "missing data is not an automatic F" path (grade withheld, not failed).

@@ -1,0 +1,130 @@
+# Global settings for the offline batch PoC.
+# Paths use FORWARD slashes even on Windows (CLAUDE.md §2).
+# Anything secret (passwords, API keys) comes from .env / env, never here.
+
+project: lonestar-video-intelligence
+timezone: America/Chicago          # store-local; NEVER emit +05:00 (Pakistan)
+
+paths:
+  # ONE dedicated AI folder (Upgrade item 3), separate from other company files.
+  # The app reads/writes ONLY inside here: <root>/incoming/<site>, /reports, /evidence.
+  # Local path for now; change to the real shared-drive path at launch, or override
+  # with the AI_SHARED_ROOT env var.
+  ai_shared_root: "data/ai_shared"
+  # Data lives on the shared drive, outside the git repo (CLAUDE.md §2).
+  # Overridable at runtime with INPUT_DIR / OUTPUT_DIR env vars.
+  input_dir:  "G:/Shared drives/4. AP/lonestar-video-intelligence/incoming"
+  output_dir: "G:/Shared drives/4. AP/lonestar-video-intelligence/reports"
+  quarantine_dir: "data/quarantine"   # corrupt/partial dumps are moved here
+
+database:
+  # Offline default — a local SQLite file (no services needed). The full
+  # Postgres + TimescaleDB path is selected by setting DATABASE_URL in .env.
+  url: "sqlite:///data/avip.db"
+
+object_storage:
+  endpoint: "localhost:9000"
+  bucket: "evidence"
+
+batch:
+  window: "overnight"        # offline batch, not real-time (CLAUDE.md §3)
+  sampling_fps: 3            # frames/sec sampled from each dump for CV
+
+ingest:
+  video_extensions: [".mp4", ".avi", ".mkv", ".wmv"]
+  min_valid_frames: 5        # fewer decodable frames => treat as corrupt/partial
+
+# --- Camera-health SOP thresholds (spec §11 + Table 8) ---
+# Fail conditions are written explicitly so the check is unambiguous:
+health:
+  blur_laplacian_min: 100        # Laplacian variance below this => BLUR
+  tamper_ssim_min: 0.75          # SSIM vs baseline below this => TAMPER (>25% drift)
+  occlusion_solid_frac_max: 0.85 # >85% of pixels solid dark/bright => OCCLUDED
+  clock_drift_max_s: 5.0         # OCR clock vs system drift above this => flag
+  solid_dark_below: 30           # pixel intensity < this counts as "solid dark"
+  solid_bright_above: 225        # pixel intensity > this counts as "solid bright"
+
+# --- Detection / tracking (M3). CPU only — no CUDA (CLAUDE.md §3). ---
+detection:
+  model: "yolov8n.pt"            # small model, CPU
+  device: "cpu"
+  person_class_id: 0             # COCO 'person'
+  person_conf: 0.35
+  imgsz: 640
+
+tracking:
+  track_activation_threshold: 0.35
+  lost_track_buffer: 30
+  minimum_matching_threshold: 0.8
+
+zones:
+  # Zone polygons in cameras.yaml are NORMALIZED (0..1) and scaled to each
+  # frame's pixel size at runtime, so they are resolution-independent.
+  dwell_min_seconds: 1.0         # minimum sustained presence to emit a zone_dwell
+
+markers:
+  aruco_dict: "DICT_4X4_50"      # OpenCV ArUco dictionary for ID badges
+  vote_min_frames: 3             # multi-frame majority vote window
+
+# --- Identity attribution (Upgrade item 6) ---
+# ArUco code stays in the pipeline but is OFF until detection is perfect + real
+# badges are deployed. Disabled = pipeline runs normally, no markers used for identity.
+identity:
+  aruco_enabled: false
+
+# --- Security & tamper protection (Upgrade item 8) ---
+# In production, set integrity_check: true and generate the known-good manifest from
+# the reviewed commit:  python -m avip.security.integrity --update
+security:
+  integrity_check: false
+  manifest_path: "security/integrity_manifest.json"
+  backup_dir: "data/backups"
+
+# --- Grading gates (spec §9.6; used from M6/M7 onward) ---
+gates:
+  coverage_min_pct: 70
+  confidence_min: 0.6
+
+# --- Run mode + incident alarm (Upgrade item 1) ---
+# mode: test = Furqan's PC (beep + on-screen incident + clip); live = Mesa server
+# (beep + clip on the Mesa LCD ONLY — never reports/HTML/dashboards on the LCD).
+runtime:
+  mode: test
+  lcd_player_cmd: null        # LIVE-mode command to show the clip on the Mesa LCD;
+                              # set later, use "{clip}" for the clip path. null = log only.
+  alarm:
+    enabled: true
+    confidence_min: 0.6       # alarm fires only when incident confidence >= this
+    beep: true
+    show_clip: true
+    beep_freq_hz: 880
+    beep_ms: 600
+    beep_repeats: 3
+
+# --- Reports / alerts destination + FIXED recipient list (Upgrade item 2) ---
+# Reports & HTML go to the shared drive for the recipients below ONLY, and NEVER to
+# the Mesa LCD (on_lcd must stay false). Emails are used by item 5 (SMTP); fill the
+# blanks here (from config, never hardcoded in code). Only people on this list ever
+# receive a report or alert.
+reports:
+  destination: shared_drive
+  on_lcd: false               # LOCKED: reports/HTML/dashboards never on the Mesa LCD
+  recipients:
+    - {name: "Ahsan",       role: camera_team_manager, email: ""}                 # camera team mgr (Pakistan)
+    - {name: "Furqan Ali",  role: engineer,            email: "furqan@example.com"}
+    - {name: "Mesa",        role: site,                email: ""}
+    - {name: "Mustafa",     role: director,            email: "mustafa@example.com"}
+    - {name: "Director 2",  role: director,            email: ""}
+    - {name: "Director 3",  role: director,            email: ""}
+
+# --- Store register (site code -> metadata). Sites in scope: CLAUDE.md §3 ---
+stores:
+  - location_id: "0008"
+    name: "Mesa Valero"
+    tz: "America/Chicago"
+  - location_id: "0025"
+    name: "Polo Club"
+    tz: "America/Chicago"
+  - location_id: "0028"
+    name: "Woodridge"
+    tz: "America/Chicago"

@@ -1,0 +1,62 @@
+[project]
+name = "avip"
+version = "0.1.0"
+description = "Lone Star — AI Video Intelligence & Operational Platform (offline batch PoC)"
+requires-python = ">=3.11"
+authors = [{ name = "Furqan Ali", email = "furqan@example.com" }]
+
+# NOTE ON ENVIRONMENT (see CLAUDE.md §3):
+#   This PoC runs on a normal CPU PC (no GPU). Detection uses the small
+#   `yolov8n` model on CPU. Ingestion reads exported MP4 files from disk —
+#   there is NO RTSP / live streaming. The database defaults to a local
+#   SQLite file so the pipeline and its tests run fully offline; the same
+#   code targets PostgreSQL + TimescaleDB via docker-compose in production.
+dependencies = [
+    "pydantic>=2.7",
+    "pydantic-settings>=2.0",
+    "PyYAML>=6.0",
+    "SQLAlchemy>=2.0",
+    "structlog>=24.0",
+    "numpy>=1.26",
+    "tzdata>=2024.1",                        # IANA tz db for zoneinfo on Windows
+    # --- computer vision (M2–M4) ---
+    "opencv-contrib-python-headless>=4.9",   # cv2 + aruco + Laplacian/histogram
+    "scikit-image>=0.22",                    # SSIM (tamper check)
+    "av>=11.0",                              # PyAV — self-contained ffmpeg decode
+    "imageio-ffmpeg>=0.4",
+    # --- detection / tracking (M3) ---
+    "ultralytics>=8.1",                      # YOLOv8n (CPU)
+    "supervision>=0.18",                     # ByteTrack + PolygonZone
+]
+
+[project.optional-dependencies]
+# Full production stack (brought up by docker-compose). Not required for the
+# offline SQLite pipeline or the test-suite.
+prod = [
+    "psycopg2-binary>=2.9",
+    "prefect>=2.16",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "minio>=7.2",
+    "langgraph>=0.1",
+    "anthropic>=0.25",
+    "paddleocr>=2.7",   # NVR clock-drift OCR (optional; health degrades gracefully without it)
+]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+avip = "avip.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["avip*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "yolo: real YOLOv8n weights (network); skipped automatically when offline",
+]

@@ -1,0 +1,9 @@
+# Chat-support service — lightweight (no CV / no GPU; stdlib HTTP + sqlite).
+FROM python:3.11-slim
+WORKDIR /app
+COPY avip/ /app/avip/
+RUN pip install --no-cache-dir pydantic pyyaml
+EXPOSE 8770
+# persist chat.db + transactions.db in a mounted volume at /app/data
+VOLUME ["/app/data"]
+CMD ["python", "-m", "avip.chat.server", "0.0.0.0", "8770"]

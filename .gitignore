@@ -1,0 +1,49 @@
+# === Secrets (NEVER commit) ===
+.env
+*.key
+credentials*.txt
+
+# Intake documents contain real store/DVR credentials, server IPs and PII.
+# They live in the repo folder for reference only and must NEVER be committed
+# (CLAUDE.md §3, design rule #6). Keep the specs/creds out of git entirely.
+*.pdf
+*.docx
+AI_Video_Platform_*
+Details of other camera*
+
+# === Data lives on the shared drive, not in git ===
+data/
+incoming/
+reports/
+evidence/
+02_Evidence/
+*.mp4
+*.avi
+*.mkv
+*.wmv
+*.mov
+
+# === Generated report HTML with embedded in-store footage frames (PII) ===
+# The director report lives under reports/ (already ignored); the DEMO kit's
+# report HTML embeds evidence frames too — never commit it.
+DEMO/*.html
+
+# === Model weights ===
+*.pt
+*.onnx
+
+# === Python ===
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# === OS / editors ===
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

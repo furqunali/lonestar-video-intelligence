@@ -1,0 +1,9 @@
+# Role -> badge colour mapping (spec Table 11).
+# Identity is non-biometric: role is inferred from ArUco marker + badge colour,
+# never from facial recognition (design rule #8).
+colours:
+  cashier: red
+  sales_associate: blue
+  housekeeping: green
+  security_guard: black
+  manager: orange

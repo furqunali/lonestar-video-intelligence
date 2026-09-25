@@ -1,0 +1,34 @@
+# Deterministic grading rubric (spec Table 10 + §9.6).
+# The grading ENGINE — not the LLM — computes every number from these values.
+version: "2026.1"
+
+# Grade bands: A 90–100 / B 75–89 / C 60–74 / F <60
+grade_bands:
+  A: 90
+  B: 75
+  C: 60
+
+# Gates that must pass before a grade is published (else -> HITL).
+gates:
+  coverage_min_pct: 70    # zone must have healthy coverage for >= this % of shift
+  confidence_min: 0.6     # contributing events must be above this confidence
+
+# Per-role metric, target, and weight. Only camera-visible metrics are graded
+# (cash/inventory are NOT camera-measurable and are out of scope, spec §4).
+roles:
+  cashier:
+    metric: register_attended_pct
+    target: 90
+    weight: 1.0
+  sales_associate:
+    metric: floor_presence_pct
+    target: 75
+    weight: 1.0
+  housekeeping:
+    metric: sweep_interval_hours
+    target: 2
+    weight: 1.0
+  security_guard:
+    metric: post_coverage_pct
+    target: 90
+    weight: 1.0

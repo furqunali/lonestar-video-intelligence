@@ -1,0 +1,167 @@
+========================================================================
+UPGRADE INSTRUCTIONS FOR CLAUDE CODE
+Project: Lone Star / Sugarland Petroleum - AI Video Intelligence Platform
+Repo:    C:\Users\Rauf\Desktop\SLP Projects All\lonestar-video-intelligence
+Date:    18 September 2026
+========================================================================
+
+HOW TO USE THIS FILE
+--------------------
+Read CLAUDE.md and the docs first. Then apply the changes below IN ORDER.
+After each numbered item: run the tests, and commit with a clear message.
+Follow all existing design rules (offline-first, agents never compute
+grades, store-local time, config-driven, schema-validated events,
+idempotent, no secrets in code). Do NOT break anything that already
+passes. Keep everything simple and readable. Stop and ask ONLY if truly
+blocked.
+
+
+------------------------------------------------------------------------
+1. INCIDENT ALARM  (beep + clip)  -- split by where it runs
+------------------------------------------------------------------------
+When an incident (theft / anomaly) is detected ABOVE the confidence
+threshold, raise an alarm:
+  - Play an alarm sound (beep/tune).
+  - Show the incident CLIP.
+  - Include: incident type, site, camera, timestamp.
+
+Two run modes, chosen by config (e.g. runtime.mode: test | live):
+  - TEST mode (my PC, now): beep + on-screen incident + clip on THIS
+    computer.
+  - LIVE mode (Mesa server, later): beep + clip shown on the MESA LCD
+    display ONLY.
+
+IMPORTANT: On the Mesa LCD, show ONLY the incident alarm (beep) and the
+clip. NO reports, NO HTML, NO dashboards on the LCD.
+
+Suppress the alarm on "no incident" clips (use the existing no-incident
+gate + confidence gate) so it does not fire on normal footage.
+
+
+------------------------------------------------------------------------
+2. REPORTS & HTML  -->  SHARED DRIVE ONLY  (never the LCD)
+------------------------------------------------------------------------
+All reports and HTML outputs go to the shared-drive folder for the
+camera team and management. They must NEVER be shown on the Mesa LCD.
+
+Recipients / audience of reports: Camera team manager (Ahsan, Pakistan),
+Furqan, Mesa, and 2-3 directors. Keep the recipient list in config as a
+FIXED list -- reports/alerts go only to this list, never to anyone else.
+
+
+------------------------------------------------------------------------
+3. DEDICATED AI SHARED-DRIVE FOLDER  (separate from company files)
+------------------------------------------------------------------------
+Use ONE dedicated folder for all AI data, separate from the rest of the
+company drive. Structure:
+
+    <AI_SHARED_ROOT>/
+        incoming/     (FreeCam MP4 exports, one subfolder per site: 0008, 0025, 0028)
+        reports/      (generated reports + HTML)
+        evidence/     (saved incident clips / key frames)
+
+Put <AI_SHARED_ROOT> in config (and .env). The app must ONLY read/write
+inside this folder -- never touch other company-drive folders.
+For now this can point to a local path on my PC; it will change to the
+real shared-drive path at launch. Read input from incoming/, write
+outputs to reports/ and evidence/.
+
+
+------------------------------------------------------------------------
+4. RUN LOCATION  =  LOCAL (my PC) for now
+------------------------------------------------------------------------
+Everything runs on THIS computer for the presentation and initial launch
+(offline, CPU only, no GPU). Keep it easy to move to the Mesa server
+later by keeping all paths and the run-mode in config (no hardcoding).
+
+
+------------------------------------------------------------------------
+5. EMAIL FOR AGENT COMMUNICATION  (company domain)
+------------------------------------------------------------------------
+Add the ability for the agent to send reports/alerts by email using a
+company account on the example.com domain, via SMTP. The exact account
+name is NOT decided yet -- do not hardcode any address. This account is
+a GENERAL company AI account that will be shared across other company
+AI projects too, so read it from config/.env and keep it generic.
+  - SMTP host / port / username / from-address / password come from
+    .env ONLY. NEVER put the address or password in code or git.
+  - Make the from-address a single config value so it can be set later
+    without code changes.
+  - Send ONLY to the fixed recipient list from item 2.
+  - Attach or link the report; for incidents, include the evidence clip
+    link.
+  - If email fails, log it and continue (do not crash the pipeline).
+
+
+------------------------------------------------------------------------
+6. ArUco MARKERS  =  KEEP IN PIPELINE, BUT DISABLED
+------------------------------------------------------------------------
+Keep all ArUco marker code in the pipeline, but turn it OFF behind a
+config flag (e.g. identity.aruco_enabled: false).
+  - When disabled: the pipeline runs normally, produces no errors, and
+    does NOT use markers for identity yet.
+  - We will set the flag to true later, once detection results are
+    perfect. Do not remove the code.
+
+
+------------------------------------------------------------------------
+7. SELF-HEALING ERROR HANDLING  (NOT self-evolving)
+------------------------------------------------------------------------
+Do NOT build any self-modifying / self-evolving behaviour. Build robust
+SELF-HEALING instead so the system never crashes:
+  - Auto-retry with backoff on transient failures (decode, DB, storage,
+    email, model).
+  - Quarantine corrupt/partial MP4s -- never half-process; log and move
+    on.
+  - The intake watcher auto-restarts if it stops.
+  - Every failure is logged with context and raises an alert; the run is
+    marked failed in the run history, but one bad file never stops the
+    whole batch.
+  - Idempotent: re-running the same clip never double-counts events or
+    grades.
+
+
+------------------------------------------------------------------------
+8. SECURITY & TAMPER PROTECTION  (protect code + data)
+------------------------------------------------------------------------
+Harden the project so code/data cannot be corrupted by a virus or any
+external AI/agent:
+  - All secrets in .env only; .env, data/, incoming/, reports/,
+    evidence/, and *.mp4 are git-ignored. Never commit a secret or a
+    video.
+  - Production runs from a FIXED, reviewed commit; the running copy is
+    treated as read-only (no live editing in production).
+  - On startup, run an INTEGRITY CHECK: hash the key code/config files
+    and compare to a stored manifest of known-good hashes. If a file was
+    changed/tampered, refuse to run and raise an alert.
+  - Keep an automatic BACKUP of the database and config on a schedule.
+  - Rule (document in README): experimental AI agents/tools must NEVER
+    run against the production copy or the AI shared-drive folder.
+  - Validate/sanitise all external inputs (filenames, paths, OCR text)
+    before use; never pass untrusted paths to the shell.
+
+
+------------------------------------------------------------------------
+9. STATUS PAGE / LABELS  =  HONEST
+------------------------------------------------------------------------
+Wherever milestone status is shown (status HTML, README, reports):
+  - M4 (ArUco markers) and M6 (roster/mapping): label as
+    "Built - awaiting activation & roster data" (NOT "Delivered"),
+    because ArUco is disabled and the real employee roster is not yet
+    provided.
+  - M7 (grading): "Built - test-passing; grades withheld until real
+    roster + attendance + golden-set."
+  - Only mark items "Delivered" if they actually run today on real data.
+  - Update any status date to the current date.
+
+
+------------------------------------------------------------------------
+AFTER ALL ITEMS
+------------------------------------------------------------------------
+Run the full test suite. Give me a short plain-language summary of:
+  - what changed,
+  - how many tests pass,
+  - anything you could not do and why.
+Do NOT publish any real employee grade. Do NOT enable ArUco. Keep the
+presentation/HTML out of the LIVE Mesa LCD path.
+========================================================================

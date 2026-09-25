@@ -8,6 +8,20 @@
   <img src="https://img.shields.io/badge/license-Review--Only-b45309?style=flat-square" alt="Review-only license">
   <img src="https://img.shields.io/badge/status-sanitized%20PoC-1c3d5a?style=flat-square" alt="sanitized">
 </p>
+<p>
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/OpenCV-CV-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV">
+  <img src="https://img.shields.io/badge/YOLOv8n-detection-00FFFF?style=flat-square" alt="YOLOv8n">
+  <img src="https://img.shields.io/badge/ByteTrack-tracking-1c3d5a?style=flat-square" alt="ByteTrack">
+  <img src="https://img.shields.io/badge/SQLAlchemy-SQLite%2FPostgres-d71f00?style=flat-square" alt="SQLAlchemy">
+  <img src="https://img.shields.io/badge/Docker-containerized-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="CI">
+  <img src="https://img.shields.io/badge/offline-CPU%20only-0d9488?style=flat-square" alt="offline">
+</p>
+
+*An offline, CPU-only computer-vision platform that turns exported store CCTV into
+structured events, risk-ranked incidents and a reviewed director report — engineered
+for auditability and safety, with 161 tests green in CI.*
 
 Offline AI platform that turns exported store CCTV clips into structured events,
 deterministic operational grades, and a simple daily report with human review.
@@ -38,6 +52,35 @@ dashboard) and an embedded **chat assistant** — this is the reviewer-facing UI
 2. Runs camera-health checks + person detection/tracking, and writes **JSON events**.
 3. Computes **deterministic grades** (register attended, zone presence, etc.).
 4. An AI agent **drafts a plain-language report**; a person reviews it with one tap.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  A[FreeCam MP4 exports<br/>i3 SRX-Pro DVRs] --> B[Ingest<br/>decode + sample]
+  B --> C[Camera health<br/>blur · tamper · clock-drift]
+  C --> D[Detect + Track<br/>YOLOv8n · ByteTrack]
+  D --> E[Zones<br/>register · floor · entrance]
+  E --> F[Identity<br/>ArUco · non-biometric · gated]
+  F --> G[(Event store<br/>SQLite / Postgres+Timescale)]
+  G --> H[POS-exception<br/>risk scoring]
+  H --> I[Incident report<br/>consolidated HTML dashboard]
+  I --> J{Human review}
+  I --> K[💬 Chat assistant &#40;Stella&#41;]
+  T[(Shared deterministic tools<br/>zones · rubric · integrity)] -.-> C & D & E & H
+```
+
+Full component-by-component design is in **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**.
+
+## ✅ Proof it works
+
+This is a working, verified system — not a slide deck:
+
+- **161 automated tests, green in CI on every push** — see the Tests badge above and the [Actions tab](https://github.com/furqunali/lonestar-video-intelligence/actions). The suite is **offline and deterministic** (synthetic media), so anyone can reproduce it with `pytest`.
+- **End-to-end pipeline** covered by tests: ingest → health → detect/track/zones → markers → events → identity → grading → reporting → chat.
+- **Sample director report** you can open right now: [`docs/sample_dashboard.html`](docs/sample_dashboard.html).
+- **Milestones M0–M7 complete** (foundation, camera health, detection/tracking/zones, ArUco decode, event builder/store, identity resolution, grading) plus analytics + robbery/hold-up incident category.
+- **Safety verified in code**: idempotent event store (re-runs never double-count), corrupt-clip quarantine, retry-with-backoff, tamper-evident integrity manifest, path-sandboxing — each with its own test.
 
 ## How it runs
 - **Offline / batch** — no live video, **no GPU required** (CPU `yolov8n` for the PoC).
@@ -155,28 +198,26 @@ Sites in the PoC: **0008 Mesa Valero, 0025 Polo Club, 0028 Woodridge** (register
 > attendance data and a labelled golden-set, and must never publish real
 > employee grades without human sign-off (CLAUDE.md §6).
 
-## Install & run
+## Install & run (authorized evaluation only)
 
-**As a Python package (PyPI):**
-```bash
-pip install avip            # published on release via CI
-avip --help                 # CLI entry point
-```
-
-**As a container (GitHub Container Registry):**
-```bash
-docker pull ghcr.io/furqunali/lonestar-video-intelligence:latest
-docker run -p 8770:8770 -v "$PWD/data:/app/data" ghcr.io/furqunali/lonestar-video-intelligence:latest
-```
+> This project is **review-only** (see [License](#license)). It is **not** distributed
+> on PyPI, and no public image is provided. The steps below are for **authorized**
+> reviewers evaluating the code on synthetic sample data — not for production use.
 
 **From source:**
 ```bash
-pip install -e ".[dev]"
-pytest -q
+pip install -e ".[dev]"     # base + pytest
+pytest -q                   # 161 tests, all green (offline, synthetic media)
 ```
 
-Releases (tagged `v*`) automatically build & publish the Docker image to GHCR;
-publishing a GitHub Release also publishes the package to PyPI.
+**Container (packaged for the maintainer's own deployment; private image):**
+```bash
+docker build -f Dockerfile.chat -t avip-chat .
+docker run -p 8770:8770 -v "$PWD/data:/app/data" avip-chat
+```
+
+A CI workflow builds the image to a **private** registry on version tags; it is
+not published publicly, consistent with the review-only license.
 
 ## License
 

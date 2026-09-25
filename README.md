@@ -128,3 +128,26 @@ Sites in the PoC: **0008 Mesa Valero, 0025 Polo Club, 0028 Woodridge** (register
 > Grades (M6–M7) are **not** started: they require the employee / roster /
 > attendance data and a labelled golden-set, and must never publish real
 > employee grades without human sign-off (CLAUDE.md §6).
+
+## Install & run
+
+**As a Python package (PyPI):**
+```bash
+pip install avip            # published on release via CI
+avip --help                 # CLI entry point
+```
+
+**As a container (GitHub Container Registry):**
+```bash
+docker pull ghcr.io/furqunali/lonestar-video-intelligence:latest
+docker run -p 8770:8770 -v "$PWD/data:/app/data" ghcr.io/furqunali/lonestar-video-intelligence:latest
+```
+
+**From source:**
+```bash
+pip install -e ".[dev]"
+pytest -q
+```
+
+Releases (tagged `v*`) automatically build & publish the Docker image to GHCR;
+publishing a GitHub Release also publishes the package to PyPI.

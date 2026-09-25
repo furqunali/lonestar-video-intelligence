@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Intelligence — Sample Director Report (synthetic)</title>
+<style>
+  :root{--navy:#1c3d5a;--teal:#0d9488;--teal-d:#0b7d73;--ink:#1f2933;--mut:#64748b;
+    --line:#e2e8f0;--bg:#f1f5f9;--card:#fff;--ok:#0f7d4d;--warn:#b45309;--no:#b91c1c;
+    --shadow:0 1px 3px rgba(16,42,67,.08),0 6px 18px rgba(16,42,67,.06)}
+  @media(prefers-color-scheme:dark){:root{--ink:#e6edf3;--mut:#93a4b8;--line:#2a3b4d;--bg:#0b1620;--card:#132433}}
+  *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 60px}
+  header.h{background:linear-gradient(120deg,var(--navy),var(--teal-d));color:#fff;border-radius:14px;padding:22px 24px;box-shadow:var(--shadow)}
+  header.h h1{margin:0 0 4px;font-size:22px}header.h p{margin:0;opacity:.9;font-size:13.5px}
+  .demo{display:inline-block;margin-top:10px;background:rgba(255,255,255,.16);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin:20px 0}
+  .kpi{background:var(--card);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--teal)}
+  .kpi .n{font-size:24px;font-weight:800;color:var(--navy)}.kpi .l{font-size:12px;color:var(--mut)}
+  .kpi.a{border-left-color:var(--no)}.kpi.b{border-left-color:var(--warn)}
+  h2{color:var(--navy);font-size:17px;margin:24px 0 10px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:13.5px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:rgba(13,148,136,.10);color:var(--navy);font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700}
+  .r-hi{background:#fdeaea;color:var(--no)}.r-md{background:#fdf3e3;color:var(--warn)}.r-lo{background:#e7f6ee;color:var(--ok)}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .frame{height:150px;background:repeating-linear-gradient(45deg,#e2e8f0,#e2e8f0 10px,#eef2f6 10px,#eef2f6 20px);
+    display:flex;align-items:center;justify-content:center;color:#64748b;font-size:12.5px;position:relative}
+  .frame .box{position:absolute;border:2px solid var(--teal);border-radius:6px}
+  .frame .lbl{position:absolute;background:var(--teal);color:#fff;font-size:10px;padding:1px 5px;border-radius:3px}
+  .card .body{padding:12px 14px}.card h3{margin:0 0 4px;font-size:14px;color:var(--navy)}
+  .card p{margin:4px 0;font-size:12.5px;color:var(--mut)}
+  .note{margin-top:22px;padding:12px 16px;border-left:4px solid var(--warn);background:#fdf3e3;border-radius:0 8px 8px 0;font-size:13px;color:#7a4f0a}
+  @media(prefers-color-scheme:dark){.note{background:#33280f;color:#fcd34d}.frame{color:#93a4b8}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="h">
+    <h1>🎥 Video Intelligence — Director Report</h1>
+    <p>Offline CCTV loss-prevention · POS-exception risk ranking · non-biometric identity · human-reviewed</p>
+    <span class="demo">SAMPLE — 100% synthetic data · no real footage or people</span>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi a"><div class="n">4</div><div class="l">Flagged incidents</div></div>
+    <div class="kpi b"><div class="n">2</div><div class="l">Awaiting human review</div></div>
+    <div class="kpi"><div class="n">3</div><div class="l">Stores covered</div></div>
+    <div class="kpi"><div class="n">1,625</div><div class="l">Events analysed</div></div>
+    <div class="kpi"><div class="n">6</div><div class="l">Cameras</div></div>
+  </div>
+
+  <h2>Risk-ranked incidents</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Type</th><th>Store</th><th>Register</th><th>Cashier (demo)</th><th>Amount</th><th>Risk</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>INC-001</td><td>Collusion void</td><td>Store A</td><td>Register 2</td><td>Jordan Lee</td><td>$18.86</td><td><span class="pill r-hi">92</span></td><td>Needs review</td></tr>
+      <tr><td>INC-002</td><td>Cash-handling</td><td>Store A</td><td>Register 1</td><td>Alex Morgan</td><td>$40.00</td><td><span class="pill r-hi">85</span></td><td>Needs review</td></tr>
+      <tr><td>INC-003</td><td>Floor shoplifting</td><td>Store B</td><td>—</td><td>—</td><td>—</td><td><span class="pill r-md">61</span></td><td>Logged</td></tr>
+      <tr><td>INC-004</td><td>Sweethearting</td><td>Store C</td><td>Register 1</td><td>Sample Cashier A</td><td>$12.40</td><td><span class="pill r-lo">33</span></td><td>Logged</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Incident evidence (illustrative)</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="frame">synthetic frame — register area
+        <div class="box" style="left:34%;top:28%;width:30%;height:52%"></div>
+        <div class="lbl" style="left:34%;top:22%">person · 0.94</div>
+      </div>
+      <div class="body"><h3>INC-001 · Collusion void</h3>
+        <p>Canceled sale −$18.86 at Register 2; cashier present, no customer at counter.</p>
+        <p><b>AI finding:</b> POS void with no corresponding customer track → escalate to human.</p></div>
+    </div>
+    <div class="card">
+      <div class="frame">synthetic frame — cash drawer
+        <div class="box" style="left:40%;top:35%;width:22%;height:40%"></div>
+        <div class="lbl" style="left:40%;top:29%">drawer-open</div>
+      </div>
+      <div class="body"><h3>INC-002 · Cash-handling</h3>
+        <p>Drawer opened outside a sale transaction window.</p>
+        <p><b>AI finding:</b> no-sale drawer-open correlated with exception log → review.</p></div>
+    </div>
+  </div>
+
+  <h2>🤖 Embedded chat assistant ("Stella")</h2>
+  <p style="font-size:13.5px;color:var(--mut)">The live report embeds a chat widget (<code>avip/chat/widget.html</code>) so a
+  director can ask e.g. <i>"search cashier over $10 voids"</i> or <i>"summarise store A incidents"</i> — answered from the events knowledge base, read-only.</p>
+
+  <div class="note"><b>Sample only.</b> Every name, store, amount and incident here is a fictitious demonstration.
+  The real report is generated by <code>build_consolidated.py</code> from store-local data on the operator's machine and is <b>never</b> published. No real video, images, or personal data appear in this repository.</div>
+</div>
+</body>
+</html>

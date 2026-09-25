@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Lone Star — AI Video Intelligence & Operational Platform (offline batch PoC)"
 requires-python = ">=3.11"
 authors = [{ name = "Furqan Ali", email = "furqan@example.com" }]
+license = { text = "Proprietary — Review-Only (see LICENSE)" }
+classifiers = ["License :: Other/Proprietary License"]
 
 # NOTE ON ENVIRONMENT (see CLAUDE.md §3):
 #   This PoC runs on a normal CPU PC (no GPU). Detection uses the small

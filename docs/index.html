@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lone Star — Video Intelligence (demo)</title>
+<style>
+  :root{--navy:#1c3d5a;--teal:#0d9488;--teal-d:#0b7d73;--ink:#1f2933;--mut:#64748b;--bg:#f1f5f9;--card:#fff;--shadow:0 6px 18px rgba(16,42,67,.08)}
+  @media(prefers-color-scheme:dark){:root{--ink:#e6edf3;--mut:#93a4b8;--bg:#0b1620;--card:#132433}}
+  *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 22px 60px}
+  header{background:linear-gradient(120deg,var(--navy),var(--teal-d));color:#fff;border-radius:16px;padding:30px 28px;box-shadow:var(--shadow)}
+  header h1{margin:0 0 6px;font-size:26px}header p{margin:0;opacity:.92}
+  .chip{display:inline-block;margin-top:12px;background:rgba(255,255,255,.16);border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  @media(max-width:640px){.cards{grid-template-columns:1fr}}
+  a.card{display:block;background:var(--card);border-radius:14px;padding:20px;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:.15s}
+  a.card:hover{transform:translateY(-2px)}
+  a.card h3{margin:0 0 6px;color:var(--teal)}a.card p{margin:0;color:var(--mut);font-size:13.5px}
+  .note{margin-top:22px;color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎥 Lone Star — AI Video Intelligence</h1>
+    <p>Offline CCTV loss-prevention: events → risk-ranked incidents → reviewed director report.</p>
+    <span class="chip">Live demo · 100% synthetic data</span>
+  </header>
+  <div class="cards">
+    <a class="card" href="sample_dashboard.html">
+      <h3>📊 Sample director report →</h3>
+      <p>Interactive dashboard: KPI tiles, risk-ranked incidents, evidence cards, chat assistant.</p>
+    </a>
+    <a class="card" href="https://github.com/furqunali/lonestar-video-intelligence">
+      <h3>💻 Source & docs →</h3>
+      <p>Code, architecture, 161-test CI. Review-only license.</p>
+    </a>
+  </div>
+  <p class="note">All names, stores and incidents shown are fictitious samples for demonstration.
+  No real footage, credentials or personal data are included.</p>
+</div>
+</body>
+</html>
